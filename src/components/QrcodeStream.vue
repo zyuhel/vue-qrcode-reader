@@ -192,7 +192,7 @@ export default {
     startScanning () {
       const detectHandler = result => {
         this.onDetect(
-          Promise.resolve({ source: 'stream', ...result })
+          Promise.resolve(result)
         )
       }
 
