@@ -1,15 +1,9 @@
-/* DEPRECATED: QrcodeReader renamed to QrcodeStream */
-import QrcodeReader from './components/QrcodeReader.vue'
-
 import QrcodeStream from './components/QrcodeStream.vue'
 import QrcodeCapture from './components/QrcodeCapture.vue'
 import QrcodeDropZone from './components/QrcodeDropZone.vue'
 
 // Install the components
 export function install (Vue) {
-  /* DEPRECATED: QrcodeReader renamed to QrcodeStream */
-  Vue.component('qrcode-reader', QrcodeReader)
-
   Vue.component('qrcode-stream', QrcodeStream)
   Vue.component('qrcode-capture', QrcodeCapture)
   Vue.component('qrcode-drop-zone', QrcodeDropZone)
@@ -17,7 +11,6 @@ export function install (Vue) {
 
 // Expose the components
 export {
-  QrcodeReader, /* DEPRECATED: QrcodeReader renamed to QrcodeStream */
   QrcodeStream,
   QrcodeCapture,
   QrcodeDropZone,
