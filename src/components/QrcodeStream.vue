@@ -33,10 +33,6 @@ import { keepScanning } from '../misc/scanner.js'
 import { thinSquare } from '../misc/track-func.js'
 import Camera from '../misc/camera.js'
 import CommonAPI from '../mixins/CommonAPI.vue'
-import isEqual from 'lodash/isEqual'
-import isBoolean from 'lodash/isBoolean'
-import isObject from 'lodash/isObject'
-import stubObject from 'lodash/stubObject'
 
 export default {
 
@@ -49,8 +45,12 @@ export default {
     },
 
     camera: {
-      type: [Object, Boolean],
-      default: stubObject,
+      type: String,
+      default: 'rear',
+
+      validator (camera) {
+        return ['rear', 'front', 'none'].includes(camera)
+      },
     },
 
     track: {
@@ -63,7 +63,6 @@ export default {
     return {
       cameraInstance: null,
       destroyed: false,
-      constraints: {},
       stopScanning: () => {},
     }
   },
@@ -73,7 +72,7 @@ export default {
     shouldStream () {
       return this.paused === false &&
         this.destroyed === false &&
-        this.constraints.video !== false
+        this.camera !== 'none'
     },
 
     shouldScan () {
@@ -103,6 +102,32 @@ export default {
       }
     },
 
+    constraints () {
+      const base = {
+        audio: false,
+        video: {
+          width: { min: 360, ideal: 640, max: 1920 },
+          height: { min: 240, ideal: 480, max: 1080 },
+        },
+      }
+
+      switch (this.camera) {
+        case 'rear':
+          base.video.facingMode = { ideal: 'environment' }
+
+          return base
+        case 'front':
+          base.video.facingMode = { exact: 'user' }
+
+          return base
+        case 'none':
+          return undefined
+
+        default:
+          return undefined
+      }
+    },
+
   },
 
   watch: {
@@ -122,37 +147,6 @@ export default {
       } else {
         this.stopScanning()
       }
-    },
-
-    camera: {
-      deep: true,
-      immediate: true,
-
-      handler (camera, oldValue) {
-        const deeplyEqual = isEqual(camera, oldValue)
-
-        if (deeplyEqual) {
-          // object reference changed but constraints are actually the same
-          return
-        } else if (isBoolean(camera)) {
-          this.constraints = {
-            audio: false,
-            video: camera,
-          }
-        } else if (isObject(camera)) {
-          this.constraints = {
-            audio: false,
-            video: {
-              facingMode: { ideal: 'environment' },
-              width: { min: 360, ideal: 640, max: 1920 },
-              height: { min: 240, ideal: 480, max: 1080 },
-
-              // overrides properties above if given
-              ...camera,
-            },
-          }
-        }
-      },
     },
 
     constraints () {
@@ -175,7 +169,7 @@ export default {
     async init () {
       this.beforeResetCamera()
 
-      if (this.constraints.video === false) {
+      if (this.constraints === undefined) {
         this.cameraInstance = null
       } else {
         this.cameraInstance = await Camera(this.constraints, this.$refs.video)
