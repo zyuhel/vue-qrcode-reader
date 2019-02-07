@@ -49,7 +49,7 @@ export default {
       default: 'rear',
 
       validator (camera) {
-        return ['rear', 'front', 'none'].includes(camera)
+        return ['rear', 'front', 'off'].includes(camera)
       },
     },
 
@@ -72,7 +72,7 @@ export default {
     shouldStream () {
       return this.paused === false &&
         this.destroyed === false &&
-        this.camera !== 'none'
+        this.camera !== 'off'
     },
 
     shouldScan () {
@@ -120,7 +120,7 @@ export default {
           base.video.facingMode = { exact: 'user' }
 
           return base
-        case 'none':
+        case 'off':
           return undefined
 
         default:
