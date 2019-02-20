@@ -11,6 +11,14 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /worker\.js$/,
+        loader: "worker-loader",
+        options: {
+          inline: true,
+          fallback: false
+        }
+      },
+      {
         test: /.js$/,
         use: "babel-loader",
         exclude: /node_modules/
@@ -25,18 +33,11 @@ module.exports = {
                 loader: "css-loader",
                 options: { minimize: true }
               }
-            }),
-            sass: ExtractTextPlugin.extract("css-loader!sass-loader"),
-            scss: ExtractTextPlugin.extract("css-loader!sass-loader")
+            })
           }
         }
       }
     ]
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      VERSION: JSON.stringify(config.version)
-    }),
-    new ExtractTextPlugin(outputFile + ".css")
-  ]
+  plugins: [new ExtractTextPlugin(outputFile + ".css")]
 };
