@@ -33,10 +33,10 @@ import { keepScanning } from '../misc/scanner.js'
 import { thinSquare } from '../misc/track-func.js'
 import Camera from '../misc/camera.js'
 import CommonAPI from '../mixins/CommonAPI.vue'
-import isEqual from 'lodash/isEqual'
-import isBoolean from 'lodash/isBoolean'
-import isObject from 'lodash/isObject'
-import stubObject from 'lodash/stubObject'
+import isEqual from 'lodash.isequal'
+import isBoolean from 'lodash.isboolean'
+import isObject from 'lodash.isobject'
+import stubObject from 'lodash.stubobject'
 
 export default {
 
